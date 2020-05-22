@@ -1,3 +1,9 @@
 # Node specifics
 node_modules
 
+# Distribution files
+dist
+
+# logs
+*.log
+
