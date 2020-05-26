@@ -2,6 +2,11 @@ import { AvionFactory } from "./Factory/AvionFactory";
 import { Documentation } from "./Factory/Documentation";
 import { Signer } from "./Decorator/Signer";
 import { SignerAuth } from "./Decorator/SignerAuth";
+import { Basket } from "./Observer/Basket";
+import { Stock } from "./Observer/Stock";
+import { Observer } from "./Observer/Observer";
+import { User } from "./Strategy/User";
+import { FullNameInversedStrategy } from "./Strategy/FullNameInversedStrategy";
 
 /**
  * Entry point of the application
@@ -10,18 +15,31 @@ import { SignerAuth } from "./Decorator/SignerAuth";
  */
 export class Main {
     public constructor() {
-        const avionFactory: AvionFactory = new AvionFactory();
-        // Récupération de l'instance d'un document Avion
-        const avion: Documentation = avionFactory.createDocumentation().get();
-        avion.setRef("1234");
-        console.log("Référence : " + avion.reference);
+        const basket: Basket = new Basket();
+        const stockObserver: Stock = new Stock();
 
-        // Utiliser un décorateur
-        const emargement: Signer = new Signer();
-        console.log(emargement.emarger());
+        basket.attach(stockObserver);
 
-        const signWithAuth: SignerAuth = new SignerAuth(emargement);
-        console.log(signWithAuth.emarger());
+        basket.add("Orange");
+        basket.add("Banane");
+
+        basket.detach(stockObserver);
+
+        basket.add("Pommes");
+
+        // Finally...
+        console.log(`Finally, basket contains : ${basket.size()} elements`);
+
+        const user: User = new User();
+        user.lastname = "Bond";
+        user.firstname = "James";
+        user.title = "Sir";
+
+        console.log(user.display());
+
+        user.setStrategy(new FullNameInversedStrategy());
+        console.log(user.display());
+        
     }
 }
 
